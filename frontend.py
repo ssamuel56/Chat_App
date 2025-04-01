@@ -1,6 +1,6 @@
 import customtkinter
 import tkinter
-
+from networking import *
 
 customtkinter.set_appearance_mode("dark")
 
@@ -63,12 +63,18 @@ class MessagingFrame(customtkinter.CTkFrame):
         self.typed_message_textbox = customtkinter.CTkTextbox(master=self, height=60)
         self.typed_message_textbox.grid(row=2, column=0, padx=5, pady=5, sticky="sew")
 
+    def load_new_message(self, msg):
+        self.new_message_bubble = customtkinter.CTkLabel(master=self.message_boxes_frame, text=msg)
+        self.new_message_bubble.pack(fill="x", expand=False, pady=5)
+
 
 class App(customtkinter.CTk):
-    def __init__(self):
+    def __init__(self, websocket):
         super().__init__()
         self.geometry("900x600")
         self.title("Geek Chat")
+        self.websocket = websocket
+        #self.get_msg = websocket.is_message()
 
         # Configure a grid structure for the application 
         # Goin to use grid for setting all content except for the actual messages and the selection frame
@@ -92,9 +98,21 @@ class App(customtkinter.CTk):
         # self.button.grid(row=0, column=4, padx=20, pady=10)
 
     # add methods to app
+    def message_checker(self):
+        #print(self.websocket.message_queue.empty())
+        while not self.websocket.message_queue.empty():
+            print('You Hit Condition')
+            self.messaging_frame.load_new_message(self.websocket.message_queue.get())
+        self.after(1000, self.message_checker)
+
     def button_click(self):
         print("button click")
 
 
-app = App()
+server = WebSocketConnection()
+server.start_as_thread()
+
+app = App(server)
+#app.message_checker()
+app.after(1000, app.message_checker())
 app.mainloop()
