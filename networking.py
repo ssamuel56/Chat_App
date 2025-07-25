@@ -5,7 +5,7 @@ import threading
 
 class WebSocketConnection:
     def __init__(self, host="", port="8001"):
-        print("init")
+        print(f"Websocket Server Started [Host: {host}] [Port: {port}]")
         self.host = host 
         self.port = port
         self.clients = set()

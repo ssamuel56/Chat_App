@@ -22,7 +22,7 @@ class ConversationFrame(customtkinter.CTkFrame):
         self.conversation_name_label.grid(column=1, columnspan=1, row=2, sticky="")
 
 
-# Class to create the message selection frame
+# Class to create the message selection container
 # Possibly call function in here that creates all the current messages
 class ConversationSelectionContainer(customtkinter.CTkScrollableFrame):
     def __init__(self, master, **kwargs):
